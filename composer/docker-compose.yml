@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  app-api:
+    image: app-api
+
+  app-clients-processor:
+    image: app-clients-processor
+
+  app-clients-searcher:
+    image: app-clients-searcher
+  
+  app-front:
+    image:
+
+  database-clients:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD: 123
+    ports:
+      - "3306:3306"
+  
+  database-processed-clients:
+    image: dwmkerr/dynamodb
+    ports:
+      - "8000:8000"
+    command: -sharedDb
+  
+  queue-clients-to-process:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "8072:15672"
+    hostname: my-rabbit
+
+  
+
+  
+
+  
