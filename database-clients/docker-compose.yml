@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+
+  database-clients:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+    ports:
+      - "3306:3306"
+
+  # database-clients:
+    # extends:
+    #   file: ../composer/docker-compose.yml
+    #   service: database-clients
+    # Versão compose 2.1
+  

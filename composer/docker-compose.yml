@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 services:
 
@@ -12,12 +12,12 @@ services:
     image: app-clients-searcher
   
   app-front:
-    image:
+    image: app-front
 
   database-clients:
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD: 123
+      - MYSQL_ROOT_PASSWORD=123
     ports:
       - "3306:3306"
   
