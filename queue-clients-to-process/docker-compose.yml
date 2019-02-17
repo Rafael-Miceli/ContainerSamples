@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  queue-clients-to-process:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "8072:15672"
+    hostname: my-rabbit

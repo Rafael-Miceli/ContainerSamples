@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  database-processed-clients:
+    image: dwmkerr/dynamodb
+    ports:
+      - "8000:8000"
+    command: -sharedDb
