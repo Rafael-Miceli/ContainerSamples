@@ -1,21 +1,28 @@
-FROM node
+FROM node as build
 
 COPY package.json ./  
 
-RUN npm set progress=false && npm config set depth 0 && npm cache clean --force
+RUN npm set progress=false && npm config set depth 0 && npm cache clean --force 
+
 # && npm config set strict-ssl false  
-## Storing node modules on a separate layer will prevent unnecessary npm installs at each build RUN npm i && mkdir /ng-app && cp -R ./node_modules ./ng-app  
+## Storing node modules on a separate layer will prevent unnecessary npm installs at each build 
+
+RUN npm i && mkdir /ng-app && cp -R ./node_modules ./ng-app  
 
 WORKDIR /ng-app  
 
-COPY . .  RUN $(npm bin)/ng build --prod --build-optimizer
+COPY . .  
 
-COPY nginx/default.conf /etc/nginx/conf.d/  
+RUN $(npm bin)/ng build --prod --build-optimizer
 
-RUN rm -rf /usr/share/nginx/html/*  
+# ENTRYPOINT [ "npm", "start" ]
 
-RUN mkdir /usr/share/nginx/html/app-front
+FROM nginx 
 
-RUN cp -R dist/* /usr/share/nginx/html/app-front
+RUN rm -rf /usr/share/nginx/html/*
 
-ENTRYPOINT ["npm", "run", "start-con"]
+WORKDIR /usr/share/nginx/html/
+
+COPY startup.sh .
+
+COPY --from=build /ng-app/dist/app-front .

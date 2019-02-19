@@ -2,46 +2,51 @@ version: '3.4'
 
 services:
 
-  app-api:
-    image: app-api
-    build: ..\app-api\
-    ports:
-      - "5666:80"
+  # app-api:
+  #   image: app-api
+  #   build: ..\app-api\
+  #   ports:
+  #     - "5666:80"
 
-  app-clients-processor:
-    image: app-clients-processor
-    build: ..\app-clients-processor\
-    ports:
-      - "5667:80"
+  # app-clients-processor:
+  #   image: app-clients-processor
+  #   build: ..\app-clients-processor\
+  #   ports:
+  #     - "5667:80"
 
-  app-clients-searcher:
-    image: app-clients-searcher
-    build: ..\app-clients-searcher\
-    ports:
-      - "5668:80"
+  # app-clients-searcher:
+  #   image: app-clients-searcher
+  #   build: ..\app-clients-searcher\
+  #   ports:
+  #     - "5668:80"
   
-  # app-front:
-  #   image: app-front
+  app-front:
+    image: app-front
+    build: ..\app-front\
+    ports:
+      - "5101:80"
+    entrypoint:
+      ["./startup.sh"]
 
-  database-clients:
-    image: mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD=123
-    ports:
-      - "3306:3306"
+  # database-clients:
+  #   image: mysql:5.7
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=123
+  #   ports:
+  #     - "3306:3306"
   
-  database-processed-clients:
-    image: dwmkerr/dynamodb
-    ports:
-      - "8000:8000"
-    command: -sharedDb
+  # database-processed-clients:
+  #   image: dwmkerr/dynamodb
+  #   ports:
+  #     - "8000:8000"
+  #   command: -sharedDb
   
-  queue-clients-to-process:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "8072:15672"
-    hostname: my-rabbit
+  # queue-clients-to-process:
+  #   image: rabbitmq:3-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "8072:15672"
+  #   hostname: my-rabbit
 
   # docker-compose up --build
 
