@@ -1,3 +1,4 @@
+#!/bin/bash
 file_content="{"
 
 while IFS='=' read -r -d '' n v; do

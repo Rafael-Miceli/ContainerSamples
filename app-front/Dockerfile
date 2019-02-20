@@ -23,6 +23,6 @@ RUN rm -rf /usr/share/nginx/html/*
 
 WORKDIR /usr/share/nginx/html/
 
-COPY startup.sh .
-
 COPY --from=build /ng-app/dist/app-front .
+
+COPY startup.sh .  

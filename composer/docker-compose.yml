@@ -27,6 +27,8 @@ services:
       - "5101:80"
     entrypoint:
       ["./startup.sh"]
+    stdin_open: true
+    tty: true
 
   # database-clients:
   #   image: mysql:5.7
