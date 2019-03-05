@@ -49,6 +49,22 @@ services:
   #     - "5672:5672"
   #     - "8072:15672"
   #   hostname: my-rabbit
+  
+  localstack:
+    image: localstack/localstack
+    container_name: localstack-s3
+    ports:
+      - "4567-4593:4567-4593"
+      - "8080:8080"
+    environment:
+      - SERVICES=s3:4572
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - localstack-data:/tmp/localstack
+
+volumes:
+  localstack-data:
+    name: localstack-data
 
   # docker-compose up --build
 
