@@ -2,44 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using data;
+using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
 
 namespace app_clients_searcher.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class JobController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ClientsRepo _clientsRepo { get; }
+        public JobController(ClientsRepo clientsRepo)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
+            _clientsRepo = clientsRepo;
+            
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("begin-clients-proccess")]
+        public async Task Post()
         {
-        }
+            //BackgroundJob.Enqueue(() => _synchronizer.SyncGlobalToHitsIncise_I_II(beginOperationDate, endOperationDate, clientCge));
+            var allClients = await _clientsRepo.GetAll();
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            var bus = RabbitHutch.CreateBus($"host={RuntimeConfig.RabbitHost}");
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            foreach (var client in allClients)
+            {
+                var clientContract = new ClientContract
+                {
+                    FirstName = client.FirstName,
+                    LastName = client.LastName
+                };
+                
+                bus.Publish(clientContract, "Clients");
+            }
         }
+        
+    }
+
+    public class ClientContract
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

@@ -2,23 +2,33 @@ version: '3.4'
 
 services:
 
-  # app-api:
-  #   image: app-api
-  #   build: ..\app-api\
-  #   ports:
-  #     - "5666:80"
+  app-api:
+    image: app-api
+    build: ..\app-api\
+    ports:
+      - "5666:80"
+    networks:
+      - my-stack
 
-  # app-clients-processor:
-  #   image: app-clients-processor
-  #   build: ..\app-clients-processor\
-  #   ports:
-  #     - "5667:80"
+  app-clients-processor:
+    image: app-clients-processor
+    build: ..\app-clients-processor\
+    ports:
+      - "5667:80"
+    environment:
+      - RABBIT__HOST=queue-clients-to-process
+    networks:
+      - my-stack
 
-  # app-clients-searcher:
-  #   image: app-clients-searcher
-  #   build: ..\app-clients-searcher\
-  #   ports:
-  #     - "5668:80"
+  app-clients-searcher:
+    image: app-clients-searcher
+    build: ..\app-clients-searcher\
+    ports:
+      - "5668:80"
+    environment:
+      - RABBIT__HOST=queue-clients-to-process
+    networks:
+      - my-stack
   
   app-front:
     image: app-front
@@ -29,27 +39,35 @@ services:
       ["./startup.sh"]
     stdin_open: true
     tty: true
+    networks:
+      - my-stack
 
-  # database-clients:
-  #   image: mysql:5.7
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=123
-  #   ports:
-  #     - "3306:3306"
+  database-clients:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+    ports:
+      - "3306:3306"
+    networks:
+      - my-stack
   
-  # database-processed-clients:
-  #   image: dwmkerr/dynamodb
-  #   ports:
-  #     - "8000:8000"
-  #   command: -sharedDb
+  database-processed-clients:
+    image: dwmkerr/dynamodb
+    ports:
+      - "8010:8010"
+    command: -sharedDb
+    networks:
+      - my-stack
   
-  # queue-clients-to-process:
-  #   image: rabbitmq:3-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "8072:15672"
-  #   hostname: my-rabbit
-  
+  queue-clients-to-process:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "8072:15672"
+    hostname: my-rabbit
+    networks:
+      - my-stack
+
   localstack:
     image: localstack/localstack
     container_name: localstack-s3
@@ -66,6 +84,8 @@ volumes:
   localstack-data:
     name: localstack-data
 
+networks:
+  my-stack:
   # docker-compose up --build
 
   

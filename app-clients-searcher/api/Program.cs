@@ -7,6 +7,11 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.AwsCloudWatch;
+using Serilog.Configuration;
+using Serilog.Exceptions;
 
 namespace app_clients_searcher
 {
@@ -19,6 +24,16 @@ namespace app_clients_searcher
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .Enrich.FromLogContext()                    
+                    .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
+                    .WriteTo.Console()
+                    .WriteTo.Logger(lc => 
+                        lc.MinimumLevel.Error()
+                        .Enrich.WithExceptionDetails()
+                        .WriteTo.Console()
+                ));
     }
 }
