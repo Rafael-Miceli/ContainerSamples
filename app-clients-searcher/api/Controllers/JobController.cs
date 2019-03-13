@@ -22,7 +22,6 @@ namespace app_clients_searcher.Controllers
         [Route("begin-clients-proccess")]
         public async Task Post()
         {
-            //BackgroundJob.Enqueue(() => _synchronizer.SyncGlobalToHitsIncise_I_II(beginOperationDate, endOperationDate, clientCge));
             var allClients = await _clientsRepo.GetAll();
 
             var bus = RabbitHutch.CreateBus($"host={RuntimeConfig.RabbitHost}");

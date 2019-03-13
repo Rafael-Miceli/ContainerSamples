@@ -29,6 +29,7 @@ namespace app_clients_searcher
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             RuntimeConfig.RabbitHost = Configuration["RABBIT:HOST"];
+            RuntimeConfig.ClientsDbConnection = Configuration.GetConnectionString("ClientsDbConnection");
 
             services.AddSwaggerGen(c =>
             {

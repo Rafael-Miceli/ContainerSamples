@@ -16,6 +16,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.AwsCloudWatch" Version="3.0.106" />
     <PackageReference Include="Serilog.Exceptions" Version="5.0.0" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.17.13" />
   </ItemGroup>
 
   <ItemGroup>

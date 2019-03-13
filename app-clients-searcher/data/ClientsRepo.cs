@@ -12,7 +12,7 @@ namespace data
         {
             using (var connection = new MySqlConnection(RuntimeConfig.ClientsDbConnection))
             {
-                return await connection.QueryAsync<Client>("Select * from clients");
+                return await connection.QueryAsync<Client>("Select * from client");
             }
         }
     }

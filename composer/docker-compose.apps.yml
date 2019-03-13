@@ -27,6 +27,7 @@ services:
       - "5668:80"
     environment:
       - RABBIT__HOST=queue-clients-to-process
+      - ConnectionStrings__ClientsDbConnection=Server=database-clients;Database=clientsdb;Uid=root;Pwd=123;
     networks:
       - my-stack
   
