@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace app_clients_searcher
 {
@@ -29,6 +30,11 @@ namespace app_clients_searcher
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             RuntimeConfig.RabbitHost = Configuration["RABBIT:HOST"];
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "App Clients Search", Version = "v1" });
+            });
+
             services.AddTransient<ClientsRepo, ClientsRepo>();
         }
 
@@ -46,6 +52,16 @@ namespace app_clients_searcher
             // }
 
             // app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "App Clients Search V1");
+            });
+
             app.UseMvc();
         }
     }

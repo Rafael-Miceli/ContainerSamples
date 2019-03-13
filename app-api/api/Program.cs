@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Exceptions;
 
 namespace app_api
 {
@@ -19,6 +21,16 @@ namespace app_api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .Enrich.FromLogContext()                    
+                    .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
+                    .WriteTo.Console()
+                    .WriteTo.Logger(lc => 
+                        lc.MinimumLevel.Error()
+                        .Enrich.WithExceptionDetails()
+                        .WriteTo.Console()
+                )); 
     }
 }
