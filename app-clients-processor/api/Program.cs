@@ -63,7 +63,7 @@ namespace app_clients_processor
 
         private static void InitializeApp()
         {            
-            var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT__HOST"]}");
+            var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}");
 
              bus.Subscribe<ClientContract>(
                 "Clients", 

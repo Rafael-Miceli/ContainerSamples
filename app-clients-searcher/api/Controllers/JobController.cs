@@ -13,11 +13,9 @@ namespace app_clients_searcher.Controllers
     public class JobController : ControllerBase
     {
         public ClientsRepo _clientsRepo { get; }
-        public JobController(ClientsRepo clientsRepo)
-        {
+        public JobController(ClientsRepo clientsRepo) =>
             _clientsRepo = clientsRepo;
-            
-        }
+        
 
         // POST api/values
         [HttpPost]

@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+
+  app-api:
+    image: app-api
+    build: ..\app-api\
+    ports:
+      - "5666:80"
+    networks:
+      - my-stack
+
+  app-clients-processor:
+    image: app-clients-processor
+    build: ..\app-clients-processor\
+    ports:
+      - "5667:80"
+    environment:
+      - RABBIT__HOST=queue-clients-to-process
+    networks:
+      - my-stack
+
+  app-clients-searcher:
+    image: app-clients-searcher
+    build: ..\app-clients-searcher\
+    ports:
+      - "5668:80"
+    environment:
+      - RABBIT__HOST=queue-clients-to-process
+    networks:
+      - my-stack
+  
+  app-front:
+    image: app-front
+    build: ..\app-front\
+    ports:
+      - "5101:80"
+    entrypoint:
+      ["./startup.sh"]
+    stdin_open: true
+    tty: true
+    networks:
+      - my-stack
+  
+
+networks:
+  my-stack:
+
+# docker-compose -f docker-compose.apps.yml up --build
+
+  
+
+  
+
+  
