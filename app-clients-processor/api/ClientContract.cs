@@ -1,4 +1,4 @@
-namespace app_clients_processor
+namespace Contracts
 {
     public class ClientContract
     {

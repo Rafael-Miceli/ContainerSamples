@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts;
 using data;
 using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
@@ -34,15 +35,22 @@ namespace app_clients_searcher.Controllers
                     LastName = client.LastName
                 };
                 
-                bus.Publish(clientContract, "Clients");
+                bus.Publish(clientContract,
+                    c => c
+                    .WithQueueName("ClientsToParse")
+                    .WithTopic("Clients")
+                );
             }
         }
         
-    }
+    }    
+}
 
+namespace Contracts
+{
     public class ClientContract
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-    }
+    }    
 }

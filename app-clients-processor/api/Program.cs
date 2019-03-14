@@ -13,6 +13,7 @@ using Serilog.Sinks.AwsCloudWatch;
 using Serilog.Configuration;
 using Serilog.Exceptions;
 using EasyNetQ;
+using Contracts;
 
 namespace app_clients_processor
 {
@@ -71,7 +72,9 @@ namespace app_clients_processor
                     Console.WriteLine("Processando cliente - " + msg.FirstName);
                     _clientsRepo.Add(new Client{Name = msg.FirstName + msg.LastName});
                 },
-                x => x.WithTopic("Clients")
+                x => x
+                .WithQueueName("ClientsToParse")
+                .WithTopic("Clients")
             );
         }
     }
