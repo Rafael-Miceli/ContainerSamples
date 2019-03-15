@@ -8,9 +8,11 @@ CREATE TABLE client (
     lastname VARCHAR(200)
 );
 
-insert into client values
-(1, 'Alex', 'Jr'),
-(2, 'Ciclano', 'Silva'),
-(3, 'Maria', 'Oliveira'),
-(4, 'Jon', 'Doe'),
-(5, 'Fulano', 'Costa')
+insert into client (firstname, lastname) values
+('Alex', 'Jr'),
+('Ciclano', 'Silva'),
+('Maria', 'Oliveira'),
+('Jon', 'Doe'),
+('Fulano', 'Costa');
+
+commit;

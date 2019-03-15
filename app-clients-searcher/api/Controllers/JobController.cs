@@ -6,6 +6,7 @@ using Contracts;
 using data;
 using EasyNetQ;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace app_clients_searcher.Controllers
 {
@@ -34,6 +35,8 @@ namespace app_clients_searcher.Controllers
                     FirstName = client.FirstName,
                     LastName = client.LastName
                 };
+
+                Log.Information($"Enviando cliente {clientContract.FirstName} - {clientContract.LastName} para fila");
                 
                 bus.Publish(clientContract,
                     c => c
