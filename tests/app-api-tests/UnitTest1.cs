@@ -22,12 +22,13 @@ namespace app_api_tests
             Assert.Equal(false, value.ToTruthy());
         }
 
-        [Fact]
-        public void When_Greater_Than_0_Return_Bool_True()
+        [Theory]
+        [InlineData("1", "2", "-1")]
+        public void When_Greater_Than_0_Return_Bool_True(string value1, string value2, string value3)
         {
-            var value = "1";
-            
-            Assert.Equal(true, value.ToTruthy());
+            Assert.Equal(true, value1.ToTruthy());
+            Assert.Equal(true, value2.ToTruthy());
+            Assert.Equal(true, value3.ToTruthy());
         }
 
         [Fact]
