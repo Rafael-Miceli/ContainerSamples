@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.ApplicationService;
 using Contracts;
 using data;
 using EasyNetQ;
@@ -14,46 +15,17 @@ namespace app_clients_searcher.Controllers
     [ApiController]
     public class JobController : ControllerBase
     {
-        public ClientsRepo _clientsRepo { get; }
-        public JobController(ClientsRepo clientsRepo) =>
-            _clientsRepo = clientsRepo;
-        
+        private readonly ClientProccessorAppService _clientProccessorAppService;
 
+        public JobController(ClientProccessorAppService clientProccessorAppService) =>
+            _clientProccessorAppService = clientProccessorAppService;
+    
+        
         // POST api/values
         [HttpPost]
         [Route("begin-clients-proccess")]
-        public async Task Post()
-        {
-            var allClients = await _clientsRepo.GetAll();
-
-            var bus = RabbitHutch.CreateBus($"host={RuntimeConfig.RabbitHost}");
-
-            foreach (var client in allClients)
-            {
-                var clientContract = new ClientContract
-                {
-                    FirstName = client.FirstName,
-                    LastName = client.LastName
-                };
-
-                Log.Information($"Enviando cliente {clientContract.FirstName} - {clientContract.LastName} para fila");
-                
-                bus.Publish(clientContract,
-                    c => c
-                    .WithQueueName("ClientsToParse")
-                    .WithTopic("Clients")
-                );
-            }
-        }
+        public async Task Post() =>
+            await _clientProccessorAppService.ProccessClient();
         
-    }    
-}
-
-namespace Contracts
-{
-    public class ClientContract
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
     }    
 }

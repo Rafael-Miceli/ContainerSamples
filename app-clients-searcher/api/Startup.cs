@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using data;
+using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +38,7 @@ namespace app_clients_searcher
             });
 
             services.AddTransient<ClientsRepo, ClientsRepo>();
+            services.AddSingleton<IBus>(RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

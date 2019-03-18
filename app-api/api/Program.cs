@@ -16,10 +16,9 @@ namespace app_api
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) =>
             CreateWebHostBuilder(args).Build().Run();
-        }
+        
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
@@ -44,7 +43,7 @@ namespace app_api
                     .Enrich.WithExceptionDetails()
                     .WriteTo.Console()
                     .WriteTo.Email(new EmailConnectionInfo(){
-                        FromEmail = "no-reply@questionmetrics.com",
+                        FromEmail = "no-reply@mycompany.com",
                         ToEmail = "rafael.miceli@hotmail.com",
                         MailServer = "localhost",
                         Port = 1025
