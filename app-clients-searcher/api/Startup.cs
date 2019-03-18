@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.ApplicationService;
 using data;
 using EasyNetQ;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +39,7 @@ namespace app_clients_searcher
             });
 
             services.AddTransient<ClientsRepo, ClientsRepo>();
+            services.AddTransient<ClientProccessorAppService, ClientProccessorAppService>();
             services.AddSingleton<IBus>(RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}"));
         }
 
