@@ -14,6 +14,7 @@ using Serilog.Configuration;
 using Serilog.Exceptions;
 using EasyNetQ;
 using Contracts;
+using Serilog.Core;
 
 namespace app_clients_processor
 {
@@ -22,36 +23,37 @@ namespace app_clients_processor
         private static IConfigurationRoot Configuration;
         private static ClientsRepo _clientsRepo;
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            InitializeConfig();
+            Configuration = await GetInitializedConfig();
+            Log.Logger = await InitializeLogs();
 
-            InitializeLogs();
             Log.Information("Logs inicializados...");
 
             Log.Information("Inicializando App");
-            InitializeApp();
+
+            var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}");
+
+            InitializeApp(bus);
 
             Console.Read();
         }
 
-        private static void InitializeConfig()
-        {
-            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            var builder = new ConfigurationBuilder()
+        private static async Task<IConfigurationRoot> GetInitializedConfig() =>
+            new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{environmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
+                .AddJsonFile($"appsettings.{GetAppEnvironment()}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+        
 
-            Configuration = builder.Build();
-        }
+        private static async Task<string> GetAppEnvironment() =>
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
 
-        private static void InitializeLogs()
-        {
-            Log.Logger = new LoggerConfiguration()
+        private static async Task<Logger> InitializeLogs() =>
+             new LoggerConfiguration()
                 .Enrich.FromLogContext()                
                 .WriteTo.Console()
                 .WriteTo.Logger(lc => 
@@ -60,22 +62,28 @@ namespace app_clients_processor
                     .WriteTo.Console()
                 )
             .CreateLogger();
-        }
+        
 
-        private static void InitializeApp()
-        {            
-            var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}");
-
+        private static void InitializeApp(IBus bus) =>
              bus.Subscribe<ClientContract>(
                 "Clients", 
                 msg => {
-                    Console.WriteLine("Processando cliente - " + msg.FirstName);
-                    _clientsRepo.Add(new Client{Name = msg.FirstName + msg.LastName});
+                    Log.Information("Processando cliente - " + msg.FirstName);
+                    _clientsRepo.Add(msg.ToClient());
                 },
                 x => x
                 .WithQueueName("ClientsToParse")
                 .WithTopic("Clients")
             );
-        }
+        
+    }
+
+    public static class ClientMapper
+    {
+        public static Client ToClient(this ClientContract clientContract) =>
+            new Client
+            {
+                Name = clientContract.FirstName + clientContract.LastName
+            };
     }
 }
