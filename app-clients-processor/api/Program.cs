@@ -66,7 +66,7 @@ namespace app_clients_processor
 
         private static void InitializeApp(IBus bus) =>
              bus.Subscribe<ClientContract>(
-                "Clients", 
+                "ClientsToParse", 
                 msg => {
                     Log.Information("Processando cliente - " + msg.FirstName);
                     _clientsRepo.Add(msg.ToClient());
