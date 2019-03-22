@@ -29,7 +29,7 @@ namespace api.ApplicationService
                 Log.Information($"Enviando cliente {clientContract.FirstName} - {clientContract.LastName} para fila");
 
                 _bus.Send("ClientsToParse",
-                    Newtonsoft.Json.JsonConvert.SerializeObject(clientContract)
+                    clientContract
                     
                     // c => c
                     // .WithQueueName("ClientsToParse")
