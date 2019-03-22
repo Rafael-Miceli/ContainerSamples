@@ -32,7 +32,9 @@ namespace app_clients_processor
 
             Log.Information("Inicializando App");
 
+            // var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}", services => services.Register(c => new MyConventions()));
             var bus = RabbitHutch.CreateBus($"host={Configuration["RABBIT:HOST"]}");
+            bus.Advanced.Container.Resolve<IConventions>().ErrorQueueNamingConvention = (con) => "MyErrorQueueNaming";
 
             InitializeApp(bus);
 
