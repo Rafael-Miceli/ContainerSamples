@@ -67,15 +67,16 @@ namespace app_clients_processor
         
 
         private static void InitializeApp(IBus bus) =>
-             bus.Subscribe<ClientContract>(
+             bus.Receive<string>(
                 "ClientsToParse", 
-                msg => {
-                    Log.Information("Processando cliente - " + msg.FirstName);
-                    _clientsRepo.Add(msg.ToClient());
-                },
-                x => x
-                .WithQueueName("ClientsToParse")
-                .WithTopic("Clients")
+                msg => {                    
+                    Log.Information("Processando cliente - " + msg);
+                    throw new Exception();
+                    //_clientsRepo.Add(msg.ToClient());
+                }
+                // x => x
+                // .WithQueueName("ClientsToParse")
+                // .WithTopic("New-Clients")
             );
         
     }
