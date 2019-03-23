@@ -15,6 +15,7 @@ using Serilog.Exceptions;
 using EasyNetQ;
 using Contracts;
 using Serilog.Core;
+using Newtonsoft.Json;
 
 namespace app_clients_processor
 {
@@ -69,14 +70,12 @@ namespace app_clients_processor
         private static void InitializeApp(IBus bus) =>
              bus.Receive<string>(
                 "ClientsToParse", 
-                msg => {                    
-                    Log.Information("Processando cliente - " + msg);
-                    throw new Exception();
-                    //_clientsRepo.Add(msg.ToClient());
+                msg => {
+                    var client = JsonConvert.DeserializeObject<ClientContract>(msg).ToClient();
+
+                    // Log.Information($"Processando cliente - {client.Name}");
+                    Log.Information($"Processando cliente - {client.Name}");
                 }
-                // x => x
-                // .WithQueueName("ClientsToParse")
-                // .WithTopic("New-Clients")
             );
         
     }

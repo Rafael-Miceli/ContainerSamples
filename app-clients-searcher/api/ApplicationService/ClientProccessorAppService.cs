@@ -5,6 +5,7 @@ using EasyNetQ;
 using Serilog;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace api.ApplicationService
 {
@@ -29,11 +30,7 @@ namespace api.ApplicationService
                 Log.Information($"Enviando cliente {clientContract.FirstName} - {clientContract.LastName} para fila");
 
                 _bus.Send("ClientsToParse",
-                    clientContract
-                    
-                    // c => c
-                    // .WithQueueName("ClientsToParse")
-                    // .WithTopic("New-Clients")
+                    JsonConvert.SerializeObject(clientContract)
                 );
             });
         
