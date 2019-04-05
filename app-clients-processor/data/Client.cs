@@ -1,8 +1,8 @@
 using Amazon.DynamoDBv2.DataModel;
 
-namespace app_clients_processor
+namespace data
 {
-    [DynamoDBTable("AnimalsInventory")]
+    [DynamoDBTable("Client")]
     public class Client
     {
         [DynamoDBHashKey]

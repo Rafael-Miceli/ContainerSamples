@@ -1,8 +1,18 @@
 version: '3.4'
 
 services:
-  database-processed-clients:
-    image: dwmkerr/dynamodb
+  localstack:
+    image: localstack/localstack
+    container_name: localstack-aws
     ports:
-      - "8000:8000"
-    command: -sharedDb
+      - "4567-4593:4567-4593"
+      - "8080:8080"
+    environment:
+      - SERVICES=s3:4572,cloudformation:4581,dynamodb:4569
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - localstack-data:/tmp/localstack
+
+volumes:
+  localstack-data:
+    name: localstack-data

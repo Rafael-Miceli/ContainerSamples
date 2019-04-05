@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  database-processed-clients:
+    image: dwmkerr/dynamodb
+    ports:
+      - "8010:8000"
+    command: -sharedDb
+  
+
+  # docker-compose -f docker-compose.dynamo.yml up

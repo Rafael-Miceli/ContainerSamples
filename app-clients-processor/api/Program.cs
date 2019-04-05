@@ -16,6 +16,7 @@ using EasyNetQ;
 using Contracts;
 using Serilog.Core;
 using Newtonsoft.Json;
+using data;
 
 namespace app_clients_processor
 {
@@ -73,8 +74,10 @@ namespace app_clients_processor
                 msg => {
                     var client = JsonConvert.DeserializeObject<ClientContract>(msg).ToClient();
 
-                    // Log.Information($"Processando cliente - {client.Name}");
                     Log.Information($"Processando cliente - {client.Name}");
+
+                    //Save into Dynamo
+                    
                 }
             );
         
