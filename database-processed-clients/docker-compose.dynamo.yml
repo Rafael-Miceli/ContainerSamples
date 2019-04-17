@@ -6,6 +6,22 @@ services:
     ports:
       - "8010:8000"
     command: -sharedDb
-  
+    networks: 
+      - database-processed-clients_default  
 
-  # docker-compose -f docker-compose.dynamo.yml up
+  dynamo-admin:
+    image: wheniwork/dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment: 
+      - DYNAMO_ENDPOINT=http://database-processed-clients:8000
+      - AWS_ACCESS_KEY_ID=mykey
+      - AWS_SECRET_ACCESS_KEY=mysecret
+    networks: 
+      - database-processed-clients_default
+  
+networks: 
+  database-processed-clients_default:
+  
+# database-processed-clients_database-processed-clients_1
+# docker-compose -f docker-compose.dynamo.yml up
