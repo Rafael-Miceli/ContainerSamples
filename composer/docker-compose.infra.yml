@@ -51,6 +51,15 @@ services:
     volumes:
       - localstack-data:/tmp/localstack
 
+  elastic:
+    image: elasticsearch
+    ports: 
+      - "9200:9200"
+      - "9300:9300"
+    container_name: elasticsearch
+    environment: 
+      - iscovery.type=single-node
+
 volumes:
   localstack-data:
     name: localstack-data
