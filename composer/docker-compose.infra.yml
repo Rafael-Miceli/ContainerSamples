@@ -52,7 +52,7 @@ services:
       - localstack-data:/tmp/localstack
 
   elastic:
-    image: elasticsearch
+    image: elasticsearch:7.1.1
     ports: 
       - "9200:9200"
       - "9300:9300"
@@ -67,4 +67,4 @@ volumes:
 networks:
   my-stack:
 
-# docker-compose -f docker-compose.infra.yml up --build
+# docker-compose -f docker-compose.infra.yml up
