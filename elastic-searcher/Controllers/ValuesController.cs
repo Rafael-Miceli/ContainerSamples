@@ -20,17 +20,28 @@ namespace elastic_searcher.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Person>> Get(int id)
+        [HttpGet("{query}")]
+        public async Task<IReadOnlyCollection<IHit<Person>>> Get(string query)
         {
             var node = new Uri("http://localhost:9200");
             var settings = new ConnectionSettings(node);
             var client = new ElasticClient(settings);
 
-            var response = await client.GetAsync<Person>(1, idx => idx.Index("personindex"));
-            var person = response.Source;
+            // var response = await client.GetAsync<Person>(1, idx => idx.Index("personindex"));
+            // var person = response.Source;
 
-            return person;
+            var response = await client.SearchAsync<Person>(s => s
+                .Index("personindex")
+                .From(0)
+                .Size(10)
+                .Query(q => 
+                    q.Term(t => t.FirstName, query) || 
+                    q.MoreLikeThis(t => t.Name(query)) || 
+                    q.Match(mq => mq.Field(f => f.FirstName).Query(query))
+                )
+            );
+
+            return response.Hits;
         }
 
         // POST api/values
