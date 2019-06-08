@@ -35,9 +35,12 @@ namespace elastic_searcher.Controllers
                 .From(0)
                 .Size(10)
                 .Query(q => 
-                    q.Term(t => t.FirstName, query) || 
-                    q.MoreLikeThis(t => t.Name(query)) || 
-                    q.Match(mq => mq.Field(f => f.FirstName).Query(query))
+                    // q.Term(t => t.FirstName, query) || 
+                    // q.MoreLikeThis(t => t.Name(query)) || 
+                    // q.Match(mq => mq.Field(f => f.FirstName).Query(query))
+                    q.QueryString(qs =>
+                        qs.Query(query + "*")
+                    )
                 )
             );
 
