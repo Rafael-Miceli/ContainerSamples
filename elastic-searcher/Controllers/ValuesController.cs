@@ -34,13 +34,32 @@ namespace elastic_searcher.Controllers
                 .Index("personindex")
                 .From(0)
                 .Size(10)
-                .Query(q => 
+                .Query(q =>                 
                     // q.Term(t => t.FirstName, query) || 
                     // q.MoreLikeThis(t => t.Name(query)) || 
                     // q.Match(mq => mq.Field(f => f.FirstName).Query(query))
+
                     q.QueryString(qs =>
-                        qs.Query(query + "*")
+                        qs.Query("*" + query + "*")
                     )
+
+                    // q.MoreLikeThis(sn =>
+                    //     sn.Like(l =>
+                    //         //l.Document(d => d.Id(Person))
+                    //         l.Text(query)
+                    //     )
+                    //     .Fields(f => f.Field(p => p.FirstName))
+                    // )
+
+                    // q.Wildcard(c =>
+                    //     c.Field(p => p.FirstName)
+                    //     .Name("named_query")
+                    //     .Boost(1.1)
+                    //     .Value(query)
+                    //     .Rewrite(MultiTermQueryRewrite.TopTermsBoost(10))
+                    // )   
+
+                    // q.CommonTerms(c => c.Field(f => f.FirstName).Query(query))
                 )
             );
 
